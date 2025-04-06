@@ -1,149 +1,150 @@
-# kubernetes-hello-world-on-minikube
+# 🚀 Kubernetes Hello World on Minikube
 
-A Kubernetes Hello World Project for Python Flask. This project uses [a simple Flask app that returns correct change](https://github.com/noahgift/flask-change-microservice) as the base and deploys it to Kubernetes.
+A beginner-friendly Kubernetes deployment of a simple Python Flask microservice that calculates change. Based on [this project](https://github.com/noahgift/flask-change-microservice), it demonstrates building, deploying, and accessing a Flask app using Minikube.
 
 ![kubernetes-load-balanced-cluster](https://user-images.githubusercontent.com/58792/111511557-3f45a280-8725-11eb-8e4a-5f5ef787796d.png)
 
 ---
 
-## 📁 Assets in Repo
+## 📁 Project Structure
 
-- `Makefile`: [Builds project](https://github.com/abhinavsaluja2004/kubernetes_on_minikube/blob/main/Makefile)
-- `Dockerfile`: [Container configuration](https://github.com/abhinavsaluja2004/kubernetes_on_minikube/blob/main/Dockerfile)
-- `app.py`: [Flask app](https://github.com/abhinavsaluja2004/kubernetes_on_minikube/blob/main/app.py)
-- `kube-hello-change.yaml`: [Kubernetes YAML Config](https://github.com/abhinavsaluja2004/kubernetes_on_minikube/blob/main/kube-hello-change.yaml)
-
----
-
-## 🚀 Get Started
-
-### 🔧 Prerequisites
-
-- [Install Minikube](https://minikube.sigs.k8s.io/docs/start/)
-- [Install kubectl](https://kubernetes.io/docs/tasks/tools/)
-- [Install Docker Desktop](https://www.docker.com/products/docker-desktop)
+| File | Description |
+|------|-------------|
+| [`Makefile`](Makefile) | Automates Docker build process |
+| [`Dockerfile`](Dockerfile) | Defines Flask app container |
+| [`app.py`](app.py) | Python Flask app logic |
+| [`kube-hello-change.yaml`](kube-hello-change.yaml) | Kubernetes deployment and service definition |
 
 ---
 
-### 🐳 Build and Deploy
+## 🔧 Prerequisites
 
-1. **Start Minikube**
-
-   ```bash
-   minikube start
-   ```
-
-2. **Check Kubernetes cluster status**
-
-   ```bash
-   kubectl cluster-info
-   ```
-
-3. **Point Docker to Minikube’s Docker engine**
-
-   ```powershell
-   & minikube -p minikube docker-env --shell powershell | Invoke-Expression
-   ```
-
-4. **Build Docker image**
-
-   ```bash
-   docker build -t flask-change:latest .
-   ```
-
-   Or use the Makefile:
-
-   ```bash
-   make build
-   ```
-
-5. **Verify image exists**
-
-   ```bash
-   docker images
-   ```
-
-6. **Deploy to Kubernetes**
-
-   ```bash
-   kubectl apply -f kube-hello-change.yaml
-   ```
-
-7. **Check deployment and pods**
-
-   ```bash
-   kubectl get deployments
-   kubectl get pods
-   ```
-
-   Sample output:
-
-   ```
-   NAME                         READY   STATUS    RESTARTS   AGE
-   hello-python-xxxxxxx-xxxxx   1/1     Running   0          5s
-   ```
+- [Minikube](https://minikube.sigs.k8s.io/docs/start/)
+- [kubectl](https://kubernetes.io/docs/tasks/tools/)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop)
 
 ---
 
-### 🌐 Expose and Access App
+## 📦 Build & Deploy
 
-1. **Expose deployment as a service**
+### 1. Start Minikube
 
-   ```bash
-   kubectl expose deployment hello-python --type=NodePort --port=8080
-   ```
+```bash
+minikube start
+```
 
-2. **Get service URL**
+### 2. Verify Cluster
 
-   ```bash
-   minikube service hello-python --url
-   ```
+```bash
+kubectl cluster-info
+```
 
-   You’ll get a URL like `http://127.0.0.1:51163`
+### 3. Point Docker to Minikube
 
-3. **Test the endpoint**
+```powershell
+& minikube -p minikube docker-env --shell powershell | Invoke-Expression
+```
 
-   ```bash
-   curl http://127.0.0.1:8080/change/1/34
-   ```
+### 4. Build the Docker Image
 
-   Sample output:
+```bash
+docker build -t flask-change:latest .
+```
 
-   ```json
-   [
-     {
-       "5": "quarters"
-     }, 
-     {
-       "1": "nickels"
-     }, 
-     {
-       "4": "pennies"
-     }
-   ]
-   ```
+Or using Makefile:
+
+```bash
+make build
+```
+
+### 5. Check Image Exists
+
+```bash
+docker images
+```
+
+### 6. Deploy to Kubernetes
+
+```bash
+kubectl apply -f deployment.yaml
+```
+
+### 7. Verify Deployment
+
+```bash
+kubectl get deployments
+kubectl get pods
+```
 
 ---
 
-### 🔍 Inspect Service
+## 🌐 Expose & Access the App
+
+### 1. Expose the Deployment as a Service
+
+```bash
+kubectl expose deployment hello-python --type=NodePort --port=8080
+```
+
+### 2. Get Service URL
+
+```bash
+minikube service hello-python --url
+```
+
+Example output:
+
+```
+http://127.0.0.1:51163
+```
+
+### 3. Test the Endpoint
+
+```bash
+curl http://127.0.0.1:51163/change/1/34
+```
+
+Sample response:
+
+```json
+[
+  { "5": "quarters" },
+  { "1": "nickels" },
+  { "4": "pennies" }
+]
+```
+
+---
+
+## ⚖️ LoadBalancer Service
+
+To simulate a load-balanced setup:
+
+### 1. Check the Service
+
+```bash
+kubectl get svc hello-flask-change-service
+```
+
+### 2. Get Its URL
+
+```bash
+minikube service hello-flask-change-service --url
+```
+
+Open the resulting URL in your browser or test via `curl`.
+
+---
+
+## 🔍 Inspect Services
 
 ```bash
 kubectl describe service hello-python
 ```
 
-Sample output:
-
-```yaml
-Name:                     hello-python
-Type:                     NodePort
-Port:                     8080/TCP
-NodePort:                 32000/TCP
-Endpoints:                172.17.0.6:8080, ...
-```
-
 ---
 
-### 🧹 Cleanup
+## 🧹 Cleanup
 
 ```bash
 kubectl delete deployment hello-python
