@@ -101,16 +101,19 @@ http://127.0.0.1:51163
 ### 3. Test the Endpoint
 
 ```bash
-curl http://127.0.0.1:51163/change/1/34
+curl http://127.0.0.1:51163/change/45
 ```
 
 Sample response:
 
 ```json
 [
-  { "5": "quarters" },
-  { "1": "nickels" },
-  { "4": "pennies" }
+{
+"ten_rupee_coins": 4
+},
+{
+"five_rupee_coins": 1
+}
 ]
 ```
 
