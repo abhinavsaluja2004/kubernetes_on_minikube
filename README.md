@@ -13,7 +13,7 @@ A beginner-friendly Kubernetes deployment of a simple Python Flask microservice 
 | [`Makefile`](Makefile) | Automates Docker build process |
 | [`Dockerfile`](Dockerfile) | Defines Flask app container |
 | [`app.py`](app.py) | Python Flask app logic |
-| [`kube-hello-change.yaml`](deployment.yaml) | Kubernetes deployment and service definition |
+| [`deployment.yaml`](deployment.yaml) | Kubernetes deployment and service definition |
 
 ---
 
